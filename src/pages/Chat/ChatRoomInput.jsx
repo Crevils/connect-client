@@ -40,10 +40,10 @@ function ChatRoomInput({ setChatMessages }) {
         }
       },
       (data) => {
-        // 更新自己的 room message
+        // room message
         setChatMessages((prev) => [...prev, { ...data.data, avatarImage: user.avatarImage }]);
 
-        // 用 socket 即時通知對方
+        // socket
         socketEmitEvent(socket).sendMessage({
           ...data.data,
           avatarImage: user.avatarImage,
@@ -51,7 +51,7 @@ function ChatRoomInput({ setChatMessages }) {
           receiver: chatId
         });
 
-        // 更新自己的 contact list
+        //  contact list
         updateContactLatestMessage({
           ...data.data,
           type: chatInfo.chatType,
@@ -65,7 +65,7 @@ function ChatRoomInput({ setChatMessages }) {
   };
 
   const handleKeyUp = () => {
-    // 如果 typing 不一樣才 emit
+    //  typing emit
     const newTypingStatus = inputMessage.trim() !== '';
     if (isTyping !== newTypingStatus) {
       socketEmitEvent(socket).userTyping({
@@ -83,7 +83,7 @@ function ChatRoomInput({ setChatMessages }) {
     if (typingNotify) {
       const { chatType, senderId, receiverId, typing } = typingNotify;
       const isChatting = chatType === 'user' ? chatId === senderId : chatId === receiverId;
-      setShowNotify(typing && isChatting); // 只有聊天中 typing 才顯示
+      setShowNotify(typing && isChatting); // typing 
     } else {
       setShowNotify(false);
     }

@@ -47,7 +47,7 @@ function ChatContextProvider({ children }) {
     fetchUserContacts();
   }, [fetchUserContacts]);
 
-  // 更新最新訊息
+
   const updateContactLatestMessage = useCallback(
     (latestMessageData) => {
       const { updateId, sender, message, updatedAt, unreadCount } = latestMessageData;
@@ -69,7 +69,6 @@ function ChatContextProvider({ children }) {
     [chatId]
   );
 
-  // 有新訊息時，更新 contact 最新訊息
   useEffect(() => {
     if (messageData) {
       const { type, receiver, sender } = messageData;
@@ -77,9 +76,9 @@ function ChatContextProvider({ children }) {
     }
   }, [messageData, updateContactLatestMessage]);
 
-  // 通知對方自己已讀
+
   const updateMessageStatusToRead = (chatId, type) => {
-    // API 更新對方發出的訊息為已讀
+    // API 
     updateReadStatus({
       method: 'PUT',
       url: chatAPI.updateReadStatus({
@@ -88,7 +87,7 @@ function ChatContextProvider({ children }) {
         type
       })
     });
-    // socket 告知對方「自己」已讀
+    // socket 
     socketEmitEvent(socket).updateMessageReaders({
       readerId: user._id,
       toId: chatId,
@@ -99,10 +98,10 @@ function ChatContextProvider({ children }) {
   const handleChatSelect = async (selected) => {
     if (selected._id !== chatId) {
       if (selected.chatType === 'room') {
-        socketEmitEvent(socket).enterChatRoom({ roomId: selected._id, message: `${user.name} 已加入聊天` });
+        socketEmitEvent(socket).enterChatRoom({ roomId: selected._id, message: `${user.name}` });
       }
       if (chatInfo?.chatType === 'room') {
-        socketEmitEvent(socket).leaveChatRoom({ roomId: chatId, message: `${user.name} 已離開聊天` });
+        socketEmitEvent(socket).leaveChatRoom({ roomId: chatId, message: `${user.name}` });
       }
       setChatInfo(selected);
       updateMessageStatusToRead(selected._id, selected.chatType);
